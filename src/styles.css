@@ -1,0 +1,10 @@
+
+.custom-snackbar {
+    font-size: 1.5em;  /* Tamaño de fuente más grande */
+    padding: 20px;    /* Más padding para mayor visibilidad */
+    background-color: #323232;  /* Color de fondo */
+    color: #ffffff;   /* Color del texto */
+    border-radius: 10px;  /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Sombra */
+}
+  

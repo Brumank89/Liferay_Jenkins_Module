@@ -1,0 +1,164 @@
+<div class="container">
+  <nav>
+    <ul>
+      <li><a (click)="isDetailsOpen = false">Casos de Prueba</a></li>
+      <li>Ejecuciones de Prueba</li>
+      <li>Informes</li>
+    </ul>
+  </nav>
+
+  <div *ngIf="!isDetailsOpen">
+    <div class="actions">
+      <button (click)="openNewTestCaseForm()" class="new-test-case-btn">
+        Nuevo Caso de Prueba
+      </button>
+      <button (click)="deleteSelectedTestCases()" class="delete-btn">
+        Eliminar Seleccionados
+      </button>
+      <button>Clonar</button>
+      <button>Mas</button>
+      <input type="text" placeholder="Buscar..." />
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>P</th>
+          <th>Clave</th>
+          <th>Nombre</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let testCase of testCases"
+          (click)="onTestCaseSelected(testCase)"
+        >
+          <td>
+            <input
+              type="checkbox"
+              [(ngModel)]="testCase.selected"
+              (click)="$event.stopPropagation()"
+            />
+          </td>
+          <td>{{ testCase.key }}</td>
+          <td>{{ testCase.name }}</td>
+          <td>
+            <span [class]="testCase.status">{{ testCase.status }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="isDetailsOpen" class="details">
+    <h2>{{ selectedTestCase?.name }}</h2>
+    <nav>
+      <ul>
+        <li (click)="showDetailsView()" [class.active]="!isStepsView">
+          Detalles
+        </li>
+        <li (click)="showStepsView()" [class.active]="isStepsView">Pasos</li>
+      </ul>
+    </nav>
+
+    <div *ngIf="!isStepsView" class="details-section">
+      <h3>Detalles</h3>
+      <p><strong>Nombre:</strong> {{ selectedTestCase?.name }}</p>
+      <p><strong>Objetivo:</strong> {{ selectedTestCase?.objective }}</p>
+      <p><strong>Precondición:</strong> {{ selectedTestCase?.precondition }}</p>
+      <p><strong>Status:</strong> {{ selectedTestCase?.status }}</p>
+      <p><strong>Prioridad:</strong> {{ selectedTestCase?.priority }}</p>
+      <p><strong>Propietario:</strong> {{ selectedTestCase?.owner }}</p>
+      <p>
+        <strong>Tiempo Estimado:</strong>
+        {{ selectedTestCase?.estimatedRunTime }}
+      </p>
+    </div>
+
+    <div *ngIf="isStepsView" class="steps-section">
+      <h3>Pasos</h3>
+      <div class="step-input">
+        <input type="text" placeholder="Paso" [(ngModel)]="newStep" />
+        <input
+          type="text"
+          placeholder="Resultado esperado"
+          [(ngModel)]="newExpectedResult"
+        />
+        <button (click)="addStep()">Añadir Paso</button>
+      </div>
+      <div class="step-list">
+        <div
+          *ngFor="let step of selectedTestCase?.steps; let i = index"
+          class="step-item"
+        >
+          <p>
+            <strong>Paso {{ i + 1 }}:</strong>
+          </p>
+          <p><strong>Descripción:</strong> {{ step.step }}</p>
+          <p><strong>Resultado esperado:</strong> {{ step.expectedResult }}</p>
+          <button (click)="removeStep(i)">Eliminar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button (click)="onDetailsClosed()">Volver</button>
+      <button *ngIf="!isStepsView">Editar</button>
+      <button *ngIf="isStepsView" class="save-feature-btn" (click)="downloadFeatureFile()">Guardar .feature</button>
+      <button *ngIf="isStepsView" class="execute-button" (click)="executeTestCase()">
+        Ejecutar
+      </button>
+    </div>
+  </div>
+
+  <!-- Nuevo Caso de Prueba Formulario Modal -->
+  <div *ngIf="isFormOpen" class="modal">
+    <div class="modal-content">
+      <h2>Crear Caso de Prueba</h2>
+      <form (ngSubmit)="addTestCase()" class="form-grid">
+        <div class="form-group">
+          <label>Nombre:</label>
+          <input [(ngModel)]="newTestCase.name" name="name" required />
+        </div>
+        <div class="form-group">
+          <label>Objetivo:</label>
+          <input [(ngModel)]="newTestCase.objective" name="objective" />
+        </div>
+        <div class="form-group">
+          <label>Precondición:</label>
+          <input [(ngModel)]="newTestCase.precondition" name="precondition" />
+        </div>
+        <div class="form-group">
+          <label>Status:</label>
+          <select [(ngModel)]="newTestCase.status" name="status" required>
+            <option value="Borrador">Borrador</option>
+            <option value="Fallido">Fallido</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Prioridad:</label>
+          <select [(ngModel)]="newTestCase.priority" name="priority">
+            <option value="Alta">Alta</option>
+            <option value="Mediana">Mediana</option>
+            <option value="Baja">Baja</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Owner:</label>
+          <input [(ngModel)]="newTestCase.owner" name="owner" />
+        </div>
+        <div class="form-group">
+          <label>Tiempo Estimado:</label>
+          <input
+            [(ngModel)]="newTestCase.estimatedRunTime"
+            name="estimatedRunTime"
+          />
+        </div>
+        <div class="form-group full-width">
+          <button type="button" (click)="onFormClosed()">Cancelar</button>
+          <button type="submit">Crear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
