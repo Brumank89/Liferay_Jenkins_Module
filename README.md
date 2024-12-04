@@ -6,6 +6,7 @@ Proyecto creado en Angular para un modulo en Liferay capaz de ejecutar pruebas a
 - Clonar el repositorio
 - Ejecutar 'npm i' Para instalar las depencdencias.
 - Ejecutar 'npm run build-element' para construir la aplicación.
+- Ejecutar 'npm run publish-element' para levantar la aplicación.
 
 
 ### - Referencias
